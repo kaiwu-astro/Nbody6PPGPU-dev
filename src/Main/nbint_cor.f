@@ -114,6 +114,34 @@ c$$$      end if
           CALL XTRNLF(XI,XIDOT,FIRR,FREG,FD,FDUM,0)
       END IF
 *
+*     Check option for central massive black hole
+      if (cmbh.gt.0.0) then
+         call cputim(tt2807)
+*
+         CALL DRAGBLCKHL(FIRR,FD,XI,XIDOT)
+*
+         call cputim(tt2808)
+         ttbh = ttbh + (tt2808-tt2807)*60.0
+*        Check presense of the accretion disk         
+         if (qzero.gt.0.0) then 
+            call cputim(tt2807)
+* 
+           CALL DRAGFORCE(I,FIRR,FD,XI,XIDOT)
+*
+            call cputim(tt2808)
+            ttdrag = ttdrag + (tt2808-tt2807)*60.0
+         endif
+      endif
+
+      if (m_bulge.gt.0.0) 
+     &   call potgal(firr,fd,xi,xidot,a_bulge,b_bulge,m_bulge)
+      if (m_disk.gt.0.0)
+     &   call potgal(firr,fd,xi,xidot,a_disk,b_disk,m_disk)
+      if (m_halo.gt.0.0)
+     &   call potgal(firr,fd,xi,xidot,a_halo,b_halo,m_halo)
+      if (r_scale.gt.0.0)
+     &   call loghalo(firr,fd,xi,xidot,r_scale,q_scale,v_nod)
+*     
 *       Include the corrector and set new F, FDOT, D1, D2 & D3.
       DTSQ = DT**2
       DT6 = 6.0/(DT*DTSQ)
@@ -151,6 +179,12 @@ c$$$      end if
    80 continue
 *
       TTMP = TSTEP(FDUM,FD,D2(1,I),D3(1,I),ETAI)
+*
+*     If drag is present reduce timestep
+      if (cmbh.gt.0.0.and.qzero.gt.0.0) then
+          call reduce_tstep_drag(i,xi,xidot,ttmp)
+      endif
+*
       DT0 = TTMP
 *     --03/03/14 20:29-lwang-debug--------------------------------------*
 ***** Note:------------------------------------------------------------**

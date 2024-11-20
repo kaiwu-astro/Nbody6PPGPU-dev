@@ -7,6 +7,7 @@
       INCLUDE 'common6.h'
       INCLUDE 'timing.h'
       REAL*8  A(9),F1(3),F1DOT(3)
+      real*8  firr(3),fd(3),xi(3),xidot(3)
       integer inum(maxpe),ista(maxpe)
 *
 *       Standard case, new c.m. or KS termination (KCASE = 0, 1, 2).
@@ -171,7 +172,49 @@
       IF (KZ(14).NE.0) THEN
           CALL XTRNLD(I1,I2,1)
       END IF
-*
+
+
+      if (cmbh.gt.0.0) then
+        do i=i1,i2
+           do k=1,3
+              xi(k)=x(k,i)
+              xidot(k)=xdot(k,i)
+              firr(k)=0
+              fd(k)=0
+           enddo
+           call dragblckhl(firr,fd,xi,xidot)
+           do k=1,3
+              fi(k,i)=fi(k,i)+firr(k)
+              d1(k,i)=d1(k,i)+fd(k)
+           enddo
+        enddo
+      endif
+
+      if (m_bulge.gt.0.0) then
+        do i=i1,i2
+           do k=1,3
+              xi(k)=x(k,i)
+              xidot(k)=xdot(k,i)
+              firr(k)=0
+              fd(k)=0
+           enddo
+           call potgal(firr,fd,xi,xidot,a_bulge,b_bulge,m_bulge)
+           if (m_disk.gt.0.0)
+     &         call potgal(firr,fd,xi,xidot,a_disk,b_disk,m_disk)
+           if (m_halo.gt.0.0)
+     &         call potgal(firr,fd,xi,xidot,a_halo,b_halo,m_halo)
+           if (r_scale.gt.0.0)
+     &         call loghalo(firr,fd,xi,xidot,r_scale,q_scale,v_nod)
+           do k=1,3
+              fi(k,i)=fi(k,i)+firr(k)
+              d1(k,i)=d1(k,i)+fd(k)
+           enddo
+        enddo
+      endif
+
+
+
+
 *       Set total force & first derivative.
       DO 50 I = I1,I2
 *

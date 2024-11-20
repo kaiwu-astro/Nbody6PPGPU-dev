@@ -14,6 +14,7 @@
       INTEGER ibarcount
 
       COMMON/TIMING/ttota,ttreg,ttirr,ttpre,ttinitial,ttint,ttks,
+     *  ttbh,ttaccr,ttdrag,
      *  ttcomm,ttadj,ttmov,ttsub,ttsub2,ttsube,ttfrc,ttgrcomm,ttgrcalc,
      *  ttgrcalc2,ttgpu,ttbar,ttnbi,ttbarnb,ttbarreg,ttintb,ttnewt,
      *  ttup,ttmdot,ttout,ttpreall,ttfic,ttfc,ttpotg,ttpot,ttecor,

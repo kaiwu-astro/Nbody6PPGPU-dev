@@ -87,7 +87,7 @@ c$$$      end if
 *       Include non-zero virial energy for Plummer potential and/or 3D case.
       VIR = POT - VIR
 *       Note angular momentum term is contained in virial energy (#14=1/2).
-      Q = ZKIN/VIR
+      Q = ZKIN/(VIR-EBLCKHL)
       E(3) = ZKIN - POT + EPL
 
 *       Modify single particle energy by tidal energy (except pure 3D).
@@ -106,11 +106,19 @@ c$$$      end if
       IF (Q.GT.1.0.AND.KZ(14).LT.3) THEN
          TCR = TCR*SQRT(2.0*Q)
       END IF
+*
 *     Form provisional total energy.
-      ETOT = ZKIN - POT + ETIDE + EPL
+      ETOT = ZKIN - POT + ETIDE + EPL + EBLCKHL + E_EXT
 *     
 *     Include KS pairs, triple, quad, mergers, collisions & chain.
       ETOT = ETOT + EBIN + ESUB + EMERGE + ECOLL + EMDOT + ECDOT
+     & + E_CORR - ediss1
+
+*     Form provisional total energy.
+*      ETOT = ZKIN - POT + ETIDE + EPL
+*     
+*     Include KS pairs, triple, quad, mergers, collisions & chain.
+*      ETOT = ETOT + EBIN + ESUB + EMERGE + ECOLL + EMDOT + ECDOT
       IF (NCH.GT.0) THEN
          ETOT = ETOT + ECH
       END IF
@@ -272,15 +280,19 @@ c$$$      END IF
 C     New (Aug.1998) by P.Kroupa: (time also in Myr)
 c$$$         WRITE(6,50) rank, TTOT, ttot*tscale, Q, DE, DELTA1, BE(3)-EBIN,
 c$$$     &        EBIN,EMERGE
+
+
          WRITE(6,50) TTOT, ttot*tscale, Q, DE, DELTA1,DETOT, E(3),
      &        ZKIN, POT, ETIDE,
-     &        BE(3),EBIN,EMERGE,ESUB,ECOLL,EMDOT,ECDOT
+     &        BE(3),EBIN,EMERGE,ESUB,ECOLL,EMDOT,ECDOT,EBLCKHL,
+     &        E_CORR, ediss1
  50      FORMAT (/,' ADJUST:  TIME',1P,D15.5,0P,'  T[Myr]',
      &        F8.2,'  Q',F5.2,'  DE',1P,E12.3,' DELTA',E12.3,
      &        ' DETOT',E12.3,' E',E12.3,' EKIN',E12.3,' POT',E12.3,
      &        ' ETIDE',E12.3,' ETOT', E12.3,
      &        ' EBIN',E12.3,' EMERGE',E12.3,' ESUB',E12.3, 
-     &        ' ECOLL',E12.3,' EMDOT',E12.3,' ECDOT',E12.3)
+     &        ' ECOLL',E12.3,' EMDOT',E12.3,' ECDOT',E12.3
+     &        ' EBLCKHL',E12.3, ' E_CORR',E12.3, ' Ediss', E12.3)
 *     
          write(6,51) RMIN, DTMIN, RHOM, RSCALE, RSMIN, ECLOSE, ICR
  51      FORMAT (/, '  RMIN =',1PE8.1,'  DTMIN =',E8.1,' RHOM =',E8.1,
@@ -289,7 +301,9 @@ c$$$     &        EBIN,EMERGE
 *     
          WRITE(6,55)
  55      FORMAT('  PE       N        Total     Inti.    Intgrt',
-     &        '      Reg.      Irr.     Pred.   Init.B.      Mdot',
+     &        '      Reg.      Irr.    '
+     &        '  Tbh.     Tdrag.    Taccr.  ',
+     &        '    Pred.   Init.B.      Mdot',
      &        '      Move   Comm.I.   Comm.R.   Send.I.   Send.R.',
      &        '        KS    Adjust     OUT      Barr.   Barr.I.   ',
      &        'Barr.R. Reg.GPU.S Reg.GPU.P Comm.Adj.',
@@ -297,17 +311,57 @@ c$$$     &        EBIN,EMERGE
      &        '    HighV  KS.Init.B',
      &        '  KS.Int.S  KS.Int.P  KS.Comm.  KS.Barr.   KS.Move',
      &        '   KS.Cmb. KS.Insert  KS.Init.  KS.Term.     Hiar.',
-     &        '     KS.UP   KS.TP      xtsub1       xtsub2')
-         WRITE(6,56)isize,n,ttotal,ttinitial,ttint,ttreg,ttirr,ttpre,
+     &        '     KS.UP       xtsub1       xtsub2')
+         WRITE(6,56)isize,n,ttotal,ttinitial,ttint,ttreg,ttirr,
+     &        ttbh,ttdrag,ttaccr,
+     &        ttpre,
      &        ttintb,ttmdot,ttmov,ttsub,ttsub2,ttsimdsend,ttgrcomm,
      &        ttks,ttadj,ttout,ttbar,ttbarnb,ttbarreg,ttgrcalc,
      &        ttgrcalc2,ttsube,ttfic,ttfc,ttpot,ttecor,ttnewt,ttshk,
      &        ttksblist,ttksints,ttksintp,ttkssub,ttksbar,ttkscp,
-     &        ttkscmb,ttksins,ttksinit,ttksterm,tttq,ttup,tttp,
-     &        xtsub1,xtsub2
- 56      FORMAT(1X,I3,I8,F13.5,40F10.2,1P,2D13.5)
+     &        ttkscmb,ttksins,ttksinit,ttksterm,tttq,ttup,xtsub1,xtsub2
+ 56      FORMAT(1X,I3,I8,F13.5,42F10.2,1P,2D13.5)
          CALL FLUSH(6)
       end if
+
+
+
+*         WRITE(6,50) TTOT, ttot*tscale, Q, DE, DELTA1,DETOT, E(3),
+*     &        ZKIN, POT, ETIDE,
+*     &        BE(3),EBIN,EMERGE,ESUB,ECOLL,EMDOT,ECDOT
+* 50      FORMAT (/,' ADJUST:  TIME',1P,E15.5,0P,'  T[Myr]',
+*     &        F8.2,'  Q',F5.2,'  DE',1P,E12.3,' DELTA',E12.3,
+*     &        ' DETOT',E12.3,' E',E12.3,' EKIN',E12.3,' POT',E12.3,
+*     &        ' ETIDE',E12.3,' ETOT', E12.3,
+*     &        ' EBIN',E12.3,' EMERGE',E12.3,' ESUB',E12.3, 
+*     &        ' ECOLL',E12.3,' EMDOT',E12.3,' ECDOT',E12.3)
+*     
+*         write(6,51) RMIN, DTMIN, RHOM, RSCALE, RSMIN, ECLOSE, ICR
+* 51      FORMAT (/, '  RMIN =',1PE8.1,'  DTMIN =',E8.1,' RHOM =',E8.1,
+*     &        ' RSCALE =',E8.1,' RSMIN =',E8.1,'  ECLOSE =',
+*     &        0PF5.2,'  TC =',I5)
+*     
+*         WRITE(6,55)
+* 55      FORMAT('  PE       N        Total     Inti.    Intgrt',
+*     &        '      Reg.      Irr.     Pred.   Init.B.      Mdot',
+*     &        '      Move   Comm.I.   Comm.R.   Send.I.   Send.R.',
+*     &        '        KS    Adjust     OUT      Barr.   Barr.I.   ',
+*     &        'Barr.R. Reg.GPU.S Reg.GPU.P Comm.Adj.',
+*     &        ' Mdot.Fic.  Mdot.Fc. Mdot.Pot.  Mdot.EC.   Sort.B.',
+*     &        '    HighV  KS.Init.B',
+*     &        '  KS.Int.S  KS.Int.P  KS.Comm.  KS.Barr.   KS.Move',
+*     &        '   KS.Cmb. KS.Insert  KS.Init.  KS.Term.     Hiar.',
+*     &        '     KS.UP   KS.TP      xtsub1       xtsub2')
+*         WRITE(6,56)isize,n,ttotal,ttinitial,ttint,ttreg,ttirr,ttpre,
+*     &        ttintb,ttmdot,ttmov,ttsub,ttsub2,ttsimdsend,ttgrcomm,
+*     &        ttks,ttadj,ttout,ttbar,ttbarnb,ttbarreg,ttgrcalc,
+*     &        ttgrcalc2,ttsube,ttfic,ttfc,ttpot,ttecor,ttnewt,ttshk,
+*     &        ttksblist,ttksints,ttksintp,ttkssub,ttksbar,ttkscp,
+*     &        ttkscmb,ttksins,ttksinit,ttksterm,tttq,ttup,tttp,
+*     &        xtsub1,xtsub2
+* 56      FORMAT(1X,I3,I8,F13.5,40F10.2,1P,2E13.5)
+*         CALL FLUSH(6)
+*      end if
 
 #ifdef GPU      
 *     GPU profile

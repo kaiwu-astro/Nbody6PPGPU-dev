@@ -1,0 +1,38 @@
+0.01 0.0 0.0003 0.0 0.0257314 0.01 0.001
+0.0 0.0 0.0 0.0 0.0 0.0
+0.0 0.0 0.0 0.0 0.0 0.0
+
+
+* Masses and scaling radii for bulge, disk, halo in NB units (see below in phys. units)
+3255.8 0.0 4.71 20930.2 518.1 4.71
+162790.7 0.0 3925.0 0.0 0.0 0.0
+
+
+
+
+
+CMBH, EPS_bh, RACCR, qzero, rcrit, Mdisc, HZ                  (input.F)
+m_bulge, a_bulge, b_bulge, m_disk, a_disk, b_disk             (input.F)
+m_halo, a_halo, b_halo, r_scale, q_scale, v_nod	 	      (input.F)
+
+CMBH - mass of the central massive black hole (CMBH)
+EPS_bh - CMBH softening
+RACCR - accretion radius in units of influence radius of the CMBH
+qzero - (0.01) q_tot for 4k stars (if 0 drag force is not used)
+rcrit - critical radius where vertical self-gravity of the accretion disk (AD) balances that of the CMBH
+Mdisc - mass of the AD
+HZ - half-thickness of the AD in units of the disk radius
+
+All parameters are in N-body units (except RACCR and HZ)
+
+Parameters for bulge, disk and halo are in solar mases and kpc
+
+1.4E+10         0.0     0.3
+9.0E+10         3.3     0.3
+7.0E+11         0.0    25.0
+
+ ----------------------------------(Dauphole & Colin 1995)
+ m_bulge a_bulge b_bulge^M
+ m_disk  a_disk  b_disk^M
+ m_halo  a_halo  b_halo
+

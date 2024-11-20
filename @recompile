@@ -1,0 +1,5 @@
+rm -i build/$1.o
+rm -i build/nbody6++
+make
+cp -p -i build/nbody6++ run-local/
+

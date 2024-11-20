@@ -1,0 +1,21 @@
+2 1000000.0 1.E6 40 40 640
+32000 1 10 28078 200 1 10
+0.02 0.02 0.1 0.1 0.1 510.0 1.0 1.0 0.7
+1 2 1 0 1 1 4 0 0 2
+0 0 0 0 2 1 0 0 0 0
+1 2 2 0 0 2 0 0 0 2
+0 0 2 0 1 0 1 1 0 0
+0 0 0 0 0 4 3 0 0 0
+1.0E-06 1.0E-03 0.1 1.0 1.0E-06 0.01 1.0
+1.0 100.0 0.08 0 0 0.0 0 0.0
+0.5 0.0 0.0 0.0
+
+TART, TCOMP, TCRITp, isernb,iserreg, iseks                    (nbody6.F)
+N, NFIX, NCRIT, NRAND, NNBOPT, NRUN                           (input.F)
+ETAI, ETAR, RS0, DTADJ, DELTAT, TCRIT, QE, RBAR, ZMBAR        (input.F)
+(KZ(J),J=1,40)                                                (input.F)
+(BK(J),J=1,10)                                                (input.F)
+DTMIN, RMIN, ETAU, ECLOSE, GMIN, GMAX                         (input.F)
+CMBH, EPS_bh, RACCR, qzero, rcrit, Mdisc, HZ                  (input.F)
+ALPHA, BODY1, BODYN, NBIN0, ZMET, EPOCH0, DTPLOT              (data.F) 
+Q, VXROT, VZROT, RSPH2                                        (scale.F)

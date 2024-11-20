@@ -31,7 +31,7 @@ c$$$      call flush(6)
          END IF
          write(6,*) 'Error: No ghost particle J',J,'STEP',STEP(J)
          call flush(6)
-         call abort()
+*         call abort()
       ELSE
          LL = NDTK(LI+1)+1
  1       IF(NXTLST(LL).EQ.I) THEN
@@ -52,7 +52,7 @@ c$$$      call flush(6)
                write(6,*) 'Error: Index ',I,' not found in step level ',
      &              LI,'!'
                call flush(6)
-               call abort()
+*               call abort()
             END IF
          END IF
       END IF

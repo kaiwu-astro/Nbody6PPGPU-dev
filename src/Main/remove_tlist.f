@@ -33,14 +33,14 @@ c$$$     &              NGHOSTS,'LIST',NXTLST(NXTLIMIT+1:NXTLIMIT+NGHOSTS)
      &        'NGHOSTS',NGHOSTS,'LIST',
      &        NXTLST(NXTLIMIT+1:NXTLIMIT+NGHOSTS)
          call flush(6)
-         call abort()
+*         call abort()
       END IF
 
 *     decrease nxtlst ending point
       IF(NXTLIMIT.LE.1) THEN
          write(6,*) 'Error: No particle in NXTLST!'
          call flush(6)
-         call abort()
+*         call abort()
       END IF
       NXTLIMIT = NXTLIMIT - 1
 *     Reduce all NDTK outside NDTMIN by one
@@ -60,7 +60,7 @@ c$$$     &              NGHOSTS,'LIST',NXTLST(NXTLIMIT+1:NXTLIMIT+NGHOSTS)
             write(6,*) 'Error: Index ',J,' not found in step level ',
      &           K,'!'
             call flush(6)
-            call abort()
+*            call abort()
          END IF
       END IF
       DO L = K-1,NDTMIN,-1

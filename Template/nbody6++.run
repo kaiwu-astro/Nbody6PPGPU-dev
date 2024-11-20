@@ -1,0 +1,8 @@
+export OMP_NUM_THREADS=8
+
+###export GPU_LIST="0 1"
+export GPU_LIST="-1"
+
+ulimit -s unlimited
+
+mpirun -np 1 ./nbody6++.avx.gpu.mpi < N128k.inp 1> N128k.$$.out 2> N128k.$$.err &

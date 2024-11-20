@@ -74,7 +74,7 @@
 #ifdef DEBUG
 *     --10/03/14 19:41-lwang-debug--------------------------------------*
 ***** Note:------------------------------------------------------------**
-      if(rank.eq.0) read(5,*) adtime,dumptime,dprintt,dtprint,namep
+*      if(rank.eq.0) read(5,*) adtime,dumptime,dprintt,dtprint,namep
 #if MPIINIT
       CALL MPI_BCAST(adtime,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
       CALL MPI_BCAST(dumptime,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
@@ -154,6 +154,9 @@
 *
       call cputim(tt2)
       ttinitial = ttinitial + (tt2-ttota)*60.
+
+*     -- Initialize RVSIGN() array ---
+      RVSIGN = 1.0
 *       Advance solutions until next output or change of procedure.
     1 CONTINUE
       call cputim(tt1)

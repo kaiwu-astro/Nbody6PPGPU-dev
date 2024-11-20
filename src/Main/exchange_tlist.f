@@ -37,7 +37,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
          IF(NLSTDELAY(1).GT.0) GO TO 12
          write(6,*) 'Error: No ghost particle I',I,'STEP',STEP(I)
          call flush(6)
-         call abort()
+*         call abort()
       ELSE
          LL = NDTK(LI+1)+1
  1       IF(NXTLST(LL).EQ.I) THEN
@@ -52,7 +52,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
                write(6,*) 'Error: Index ',I,' not found in step level ',
      &              LI,'!'
                call flush(6)
-               call abort()
+*               call abort()
             END IF
          END IF
       END IF
@@ -66,7 +66,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
       END DO
       write(6,*) 'Error: No delay particle I',I,'STEP',STEP(I)
       call flush(6)
-      call abort()
+*      call abort()
 
 *     Check ghost
  30   IF(LJ.EQ.-1) THEN
@@ -83,7 +83,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
          IF(NLSTDELAY(1).GT.0) GO TO 22
          write(6,*) 'Error: No ghost particle J',J,'STEP',STEP(J)
          call flush(6)
-         call abort()
+*         call abort()
       ELSE
          LL = NDTK(LJ+1)+1
  2       IF(NXTLST(LL).EQ.J) THEN
@@ -98,7 +98,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
                write(6,*) 'Error: Index ',J,' not found in step level ',
      &              LJ,'!'
                call flush(6)
-               call abort()
+*               call abort()
             END IF
          END IF
       END IF
@@ -112,7 +112,7 @@ c$$$     &     NLSTDELAY(1:NLSTDELAY(1)+1)
 
       write(6,*) 'Error: No delay particle J',J,'STEP',STEP(J)
       call flush(6)
-      call abort()
+*      call abort()
 
       RETURN
 

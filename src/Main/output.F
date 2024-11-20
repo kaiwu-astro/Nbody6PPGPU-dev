@@ -43,7 +43,7 @@
 *
 *       Include KS pairs, triple, quad, mergers, collisions & chain.
       ETOT = ZKIN - POT + ETIDE + EBIN + ESUB + EMERGE + ECOLL + EMDOT
-     &                                                         + ECDOT
+     &                          + ECDOT + EBLCKHL + E_CORR - ediss1
       IF (NCH.GT.0) THEN
           ETOT = ETOT + ECH
       END IF
@@ -570,6 +570,22 @@ C         END DO
 
       end if
 *
+
+*       Additional black hole output:
+      if (cmbh.gt.0.0) then 
+*        call bh_out(xs,vs,bodys)
+*
+        if(rank.eq.0) then
+       OPEN (UNIT=27,STATUS='UNKNOWN',FORM='FORMATTED',
+     &   FILE='mass_bh.dat', ACCESS='APPEND')
+*
+         WRITE (27, 505) ttot, cmbh
+ 505  FORMAT (e15.6, e15.6)      
+         CALL FLUSH(27)
+        endif
+*
+        endif        
+
 *       Update next output interval and initialize the corresponding error.
   100 TNEXT = TNEXT + DELTAT
       ERROR = 0.0D0

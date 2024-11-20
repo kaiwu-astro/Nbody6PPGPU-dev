@@ -17,6 +17,7 @@
      &    NS=44*MMAX)
       REAL*4  B,C,D,E,G,L,M,O,P,Q,S
       INTEGER K,I,NTSAVE,NPARTMP(10),KSTAR,NCOMM,IA
+      REAL*8 Mdisc
 *
       COMMON/NAMES/  NTOT,NPAIRS,NTTOT,IA(NA)
       COMMON/COUNTS/ B(NB)
@@ -30,6 +31,8 @@
       COMMON/MODES/  P(NP)
       COMMON/RCHE/   Q(NQ)
       COMMON/BINARY/ S(NS)
+       COMMON/DRAG/   CMBH,EPS_bh,raccr,qzero,r_crit,Mdisc,hz,EBLCKHL,
+     &               E_CORR,a_drag(3,nmax),ediss1, iaccr
 
       COMMON/NBODY/  X(3,NMAX),XDOT(3,NMAX),X0(3,NMAX),X0DOT(3,NMAX),
      &               F(3,NMAX),FDOT(3,NMAX),BODY(NMAX),RS(NMAX),
@@ -121,7 +124,9 @@
      *   (spin(i),i=1,ntot),(xstar(i),i=1,ntot),(zlmsty(i),i=1,ntot),
      *   ((fidot(k,i),k=1,3),i=1,ntot),((d0(k,i),k=1,3),i=1,ntot),
      *   ((frdot(k,i),k=1,3),i=1,ntot),((d0r(k,i),k=1,3),i=1,ntot),
-     *   (kstar(i),i=1,ntot),(iminr(i),i=1,ntot),(name(i),i=1,ntot)
+     *   (kstar(i),i=1,ntot),(iminr(i),i=1,ntot),(name(i),i=1,ntot),
+     *   cmbh,EPS_bh,raccr,qzero,r_crit,Mdisc,hz,eblckhl,
+     *   e_corr,((a_drag(k,i),k=1,3),i=1,ntot),ediss1,iaccr     
 *
         write (J) ((u(k,i),k=1,4),i=1,npairs),((u0(k,i),k=1,4),i=1,
      *    npairs),((udot(k,i),k=1,4),i=1,npairs),((fu(k,i),k=1,4),i=1,
@@ -262,7 +267,9 @@
      *   (spin(i),i=1,ntot),(xstar(i),i=1,ntot),(zlmsty(i),i=1,ntot),
      *   ((fidot(k,i),k=1,3),i=1,ntot),((d0(k,i),k=1,3),i=1,ntot),
      *   ((frdot(k,i),k=1,3),i=1,ntot),((d0r(k,i),k=1,3),i=1,ntot),
-     *   (kstar(i),i=1,ntot),(iminr(i),i=1,ntot),(name(i),i=1,ntot)
+     *   (kstar(i),i=1,ntot),(iminr(i),i=1,ntot),(name(i),i=1,ntot),
+     *   cmbh,EPS_bh,raccr,qzero,r_crit,Mdisc,hz,eblckhl,
+     *   e_corr,((a_drag(k,i),k=1,3),i=1,ntot),ediss1,iaccr
 *
         read (J) ((u(k,i),k=1,4),i=1,npairs),((u0(k,i),k=1,4),i=1,
      *    npairs),((udot(k,i),k=1,4),i=1,npairs),((fu(k,i),k=1,4),i=1,
@@ -374,6 +381,19 @@
        CALL MPI_BCAST(ZLMSTY(1),NTOT,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
        CALL MPI_BCAST(KSTAR(1),NTOT,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
        CALL MPI_BCAST(IMINR(1),NTOT,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(cmbh,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(eps_bh,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(raccr,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(qzero,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(r_crit,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(Mdisc,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(hz,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(eblckhl,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(e_corr,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(a_drag(1,1),3*NTOT,MPI_REAL8,0,
+     &                                   MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(ediss1,1,MPI_REAL8,0,MPI_COMM_WORLD,ierr)
+       CALL MPI_BCAST(iaccr,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
 
 *
 *       read u,u0,udot,fu,fudot,fudot2,fudot3,fp0,fd0 (4,npairs) sf(7,npairs)
