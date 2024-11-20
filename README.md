@@ -1,3 +1,13 @@
+# Note by Kai
+
+This is Zhong Shiyan's version in 2021, downloaded from `obiwan:/home/zhong/PTDE-4_3+kick/MS_model/Nbody6_code`. 
+
+This is uploaded mainly to compare the changes in `accretion.f`. Click here -> https://github.com/nbody6ppgpu/Nbody6PPGPU-beijing/blob/ZhongShiyan-accretion/src/Main/accretion.f ; maybe search `Zhong` for changes, or use `diff` and `git diff`.
+
+This code seems to be based on the Feb2019 version, but has many unique changes. Be very careful when trying to merge anything from this branch to `dev`; never merge to `stable`.
+
+Below is the original README.
+
 Welcome to use Nbody6++, which is the parallel version of Nbody6.
 Please send Email to longwang.astro@gmail.com if you find some problems during using the code.
 
