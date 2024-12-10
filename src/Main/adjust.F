@@ -284,7 +284,7 @@ C     New (Aug.1998) by P.Kroupa: (time also in Myr)
          if(nblckr.gt.0)xnpred = xnpred/dble(nblckr)     
          if(nblock.gt.0)xnirff = xnirrf/dble(nblock)
          WRITE(6,55)
- 55      FORMAT('  rank   PE   N        Total     Inti.    Intgrt',
+ 55      FORMAT('  rank   PE   N        Total     Init.    Intgrt',
      &      '      Reg.      Irr.   Predall     Pred.   Init.B.',
      &      '      Mdot      Move   Comm.I.   Comm.R.   Send.I.',
      &      '   Send.R.        KS    Adjust       OUT     Barr.',
