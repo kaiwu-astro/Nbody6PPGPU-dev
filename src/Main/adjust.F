@@ -266,8 +266,8 @@ C     New (Aug.1998) by P.Kroupa: (time also in Myr)
      &        ZKIN, POT, ETIDE,
      &        BE(3),EBIN,EMERGE,ESUB,ECOLL,EMDOT,ECDOT,EBLCKHL,
      &        E_CORR, ediss1
- 50      FORMAT (/,' ADJUST:  TIME',1P,D15.5,0P,'  T[Myr]',
-     &        F8.2,'  Q',F5.2,'  DE',1P,E12.3,' DELTA',E12.3,
+ 50      FORMAT (/,' ADJUST:  TIME',1P,E15.5,0P,'  T[Myr]',
+     &        E12.3,'  Q',E12.3,'  DE',1P,E12.3,' DELTA',E12.3,
      &        ' DETOT',E12.3,' E',E12.3,' EKIN',E12.3,' POT',E12.3,
      &        ' ETIDE',E12.3,' ETOT', E12.3,
      &        ' EBIN',E12.3,' EMERGE',E12.3,' ESUB',E12.3, 
