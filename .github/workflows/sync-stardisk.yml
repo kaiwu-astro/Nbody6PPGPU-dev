@@ -1,4 +1,4 @@
-# Automatically synchronises the stardisk branch with the stable branch
+# Automatically synchronises the stardisk branch with the dev branch
 # 
 # In case of failure (merge conflict) the conflict needs to be resolved by
 # hand. For a detailed description see the git book:
@@ -7,14 +7,14 @@
 #  advanced merging: https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging
 #
 # The general outline goes as follows:
-# 1. Make sure the stable and stardisk branches are up to date, respectively
-#    git checkout stable
+# 1. Make sure the dev and stardisk branches are up to date, respectively
+#    git checkout dev
 #    git pull
 #    git checkout stardisk
 #    git pull
-# 2. Merge stable into stardisk (make sure you are on the stardisk branch first)
+# 2. Merge dev into stardisk (make sure you are on the stardisk branch first)
 #    git checkout stardisk
-#    git merge stable
+#    git merge dev
 # 3. Merge conflicts should appear. Fix conflict in a way of your choice, e.g.,
 #    git mergetool --tool=vimdiff
 # 4. commit and push your changes to the upstream stardisk branch
